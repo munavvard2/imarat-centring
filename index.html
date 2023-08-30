@@ -3261,7 +3261,7 @@
                     let aadiBrass = totalAadi / 40;
                     let tekaBrass = totalTeka / 16;
 
-                    // let majuri = Number(((plateBrass + aadiBrass + tekaBrass) / 3) * 0);
+                    let majuri = Number(((plateBrass + aadiBrass + tekaBrass) / 3) * 100);
 
                     let minBrass = Math.min(plateBrass, aadiBrass, tekaBrass);
 
@@ -3291,9 +3291,9 @@
                     $('.extraTekaBrass').text(Number(extraTekaBrass).toFixed(2));
                     $('.extraTekaBrassAmt').text(extraTekaBrassAmt);
 
-                    // $('.majuriAmt').text(majuri.toFixed(2));
+                    $('.majuriAmt').text(majuri.toFixed(2));
 
-                    let gTotal = Number(regularBrassAmt + extraPlateBrassAmt + extraAadiBrassAmt + extraTekaBrassAmt).toFixed(2); //+ majuri
+                    let gTotal = Number(regularBrassAmt + extraPlateBrassAmt + extraAadiBrassAmt + extraTekaBrassAmt + majuri).toFixed(2);
                     $('#total').val(gTotal);
                     $('.gTotalAmt').text(gTotal);
                 };
@@ -3421,13 +3421,13 @@
                                             <td><span class="extraTekaBrass">&nbsp;</span></td>
                                             <td><span class="extraTekaBrassAmt">&nbsp;</span></td>
                                         </tr>
-                                        <!-- <tr>
+                                        <tr>
                                             <td>Majuri</td>
                                             <td><span class="">&nbsp;</span></td>
                                             <td><span class="majuriAmt">&nbsp;</span>
                                                 <input type="hidden" name="majuri" class="majuriAmt" id="majuri">
                                             </td>
-                                        </tr> -->
+                                        </tr>
                                         <tr>
                                             <td><b>Grand Total</b></td>
                                             <td><span class="">&nbsp;</span></td>
