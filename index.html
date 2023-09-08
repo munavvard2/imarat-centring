@@ -1246,6 +1246,9 @@
             }
         }
         
+        .show-on-print{
+            display: none;
+        }
 
         @media print {
             @page {
@@ -1254,6 +1257,9 @@
 
             .hide-on-print {
                 display: none !important;
+            }
+            .show-on-print{
+                display: block !important;
             }
 
             body {
@@ -1268,6 +1274,12 @@
                 border: 0rem solid #d1d1d1 !important;
                 border-bottom: 0.1rem solid #d1d1d1 !important;
             }
+        }
+        .text-center{
+            text-align: center;
+        }
+        tr.bcmccccc td {
+            border: 0px !important;
         }
     </style>
         <style media="all">
@@ -3224,19 +3236,19 @@
                 box-shadow: 0 0 5px #666
             }
         </style>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 
 </head>
 
 <body>
-    <nav class="top-nav">
+    <nav class="top-nav hide-on-print">
         <div class="top-nav-title">
             <a href="#"><span>Imarat</span> Centring</a>
         </div>
         <div class="top-nav-links">
         </div>
     </nav>
-    <main class="main">
+    <main class="main hide-on-print">
         <div class="container">
             <script>
                 let getAmount = (brass, type) => {
@@ -3292,10 +3304,13 @@
                     $('.extraTekaBrassAmt').text(extraTekaBrassAmt);
 
                     $('.majuriAmt').text(majuri.toFixed(2));
-
+                    let subTotal = Number(regularBrassAmt + extraPlateBrassAmt + extraAadiBrassAmt + extraTekaBrassAmt).toFixed(2);
                     let gTotal = Number(regularBrassAmt + extraPlateBrassAmt + extraAadiBrassAmt + extraTekaBrassAmt + majuri).toFixed(2);
+                    
                     $('#total').val(gTotal);
                     $('.gTotalAmt').text(gTotal);
+                    $('.total_without_majuri').text(subTotal);
+
                 };
 
                 $(function ($) {
@@ -3442,7 +3457,7 @@
                             <input type="hidden" name="created_by" id="created-by" value="1">
                             <div class="row hide-on-print">
                                 <div class="column">
-                                    <button class="button-block" type="button" onclick="window.print()">Print
+                                    <button class="button-block" type="button" onclick="printthebill()">Print
                                         Bill</button>
                                 </div>
                             </div>
@@ -3468,13 +3483,195 @@
                     },
                 };
                 jQuery(document).ready(function ($) {
-                    $('#from-date').val(moment().format('DD/MM/YYYY'));
-                    $('#to-date').val(moment().add(15, 'days').format('DD/MM/YYYY'));
-
+                    $('#from-date').val(moment().subtract(15, 'days').format('DD/MM/YYYY'));
+                    $('#to-date').val(moment().format('DD/MM/YYYY'));
+                    $('.current_date').html(moment().format('DD/MM/YYYY'));
                 });
+
+                let printthebill = function(){
+                    $('.billing_body').html('');
+                    let forVigat = [
+                        {'selector':'#p-3-2','name':'પ્લેટ 3X2'},
+                        {'selector':'#p-3-1-ll','name':'પ્લેટ 3X1ll'},
+                        {'selector':'#p-3-1-l','name':'પ્લેટ 3X1l'},
+                        {'selector':'#p-3-1','name':'પ્લેટ 3X1'},
+                        {'selector':'#teka','name':'ટેકા'},
+                        {'selector':'#aadi','name':'આડી'},
+                    ];
+                    let bcmccccc = forVigat.reduce((bcmccccc,crr)=>{
+                        return bcmccccc + `
+                            <td>
+                                <div>${crr.name}</div>
+                                <div>${ $(crr.selector).val() }</div>
+                            </td>
+                        `;
+                    },"");
+                    $('.bcmccccc').html(bcmccccc);
+                    $('.customer_name').html($('#cust-name').val());
+                    $('.site').html($('#site').val());
+                    $('.mukam').html($('#mukam').val());
+
+                    $('.from_dateVigat').html($('#from-date').val());
+                    $('.to_dateVigat').html($('#to-date').val());
+                    $('.daysVigat').html($('#days').val());
+                    
+                    let counter = 1;
+                    let html = "";
+                    if($('.regularBrass').html() != "0.00"){
+                        html += `
+                                <tr>
+                                    <td>${counter}</td>
+                                    <td>${$('.regularBrass').html()} બ્રાસ સેન્ટરીંગ</td>
+                                    <td>${$('#brass-price').val()}</td>
+                                    <td>${$('.regularBrassAmt').html()}</td>
+                                </tr>
+                            `;
+                        counter++;
+                    }
+
+                    if($('.extraPlateBrass').html() != "0.00"){
+                        html += `
+                                <tr>
+                                    <td>${counter}</td>
+                                    <td>${$('.extraPlateBrass').html()} બ્રાસ પ્લેટ</td>
+                                    <td>${$('#extra-plate-price').val()}</td>
+                                    <td>${$('.extraPlateBrassAmt').html()}</td>
+                                </tr>
+                            `;
+                        counter++;
+                    }
+
+                    if($('.extraAadiBrass').html() != "0.00"){
+                        html += `
+                                <tr>
+                                    <td>${counter}</td>
+                                    <td>${$('.extraAadiBrass').html()} બ્રાસ આડી</td>
+                                    <td>${$('#extra-aadi-price').val()}</td>
+                                    <td>${$('.extraAadiBrassAmt').html()}</td>
+                                </tr>
+                            `;
+                        counter++;
+                    }
+
+                    if($('.extraTekaBrass').html() != "0.00"){
+                        html += `
+                                <tr>
+                                    <td>${counter}</td>
+                                    <td>${$('.extraTekaBrass').html()} બ્રાસ ટેકા</td>
+                                    <td>${$('#extra-aadi-price').val()}</td>
+                                    <td>${$('.extraTekaBrassAmt').html()}</td>
+                                </tr>
+                            `;
+                        counter++;
+                    }
+                    $('.billing_body').html(html);
+                    window.print();
+                }
             </script>
         </div>
     </main>
+    <div class="print show-on-print">
+        <div>
+            <div class="row">
+                <div class="column">
+                    જુનેદ - ૭૬૯૮૬૨૦૬૨૦
+                </div>
+                <div class="column text-right">
+                    આકિલ - ૯૦૯૯૬૨૦૬૨૦
+                </div>
+            </div>
+            <div class="row">
+                <div class="column text-center">
+                    <div style="font-size:42px">
+                        ઇમારત સેન્ટરીંગ
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column text-center">
+                    <div style="font-size: 16px;">
+                        સેન્ટરીંગ, સિમેન્ટ , સળિયા , તથા  અન્ય  બિલ્ડીંગ  મટીરીઅલ  ના  વેપારી 
+                    </div>
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="column">
+                    નામ : <u class="customer_name"></u>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column column-33">
+                    સાઈટ : <u class="site"></u>
+                </div>
+                <div class="column column-33">
+                    મુકામ : <u class="mukam"></u>
+                </div>
+                <div class="column column-33">
+                    તા. : <u class="current_date"></u>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column column-33">
+                    લઇ ગયા તા. : <u class="from_dateVigat"></u>
+                </div>
+                <div class="column column-33">
+                    પરત તા. : <u class="to_dateVigat"></u>
+                </div>
+                <div class="column column-33">
+                    દિવસ : <u class="daysVigat"></u>
+                </div>
+            </div>
+            
+            <div class="row">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>
+                                વિગત
+                            </th>
+                            <th>
+                                ભાવ
+                            </th>
+                            <th>
+                                રૂપિયા
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="billing_body">
+
+                    </tbody>
+                    <tfoot>
+                        <tr >
+                            <td rowspan="3"></td>
+                            <td rowspan="3">
+                                <table class="text-center" style="border:0px">
+                                    <tr class="bcmccccc" >
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>કુલ</td>
+                            <td class="total_without_majuri"></td>
+                        </tr>
+                        <tr>
+                            <!-- <td></td>
+                            <td></td> -->
+                            <td>મજૂરી</td>
+                            <td class="majuriAmt"></td>
+                        </tr>
+                        <tr>
+                            <!-- <td></td>
+                            <td></td> -->
+                            <td>ટોટલ રૂ.</td>
+                            <td class="gTotalAmt"></td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
