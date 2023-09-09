@@ -3520,10 +3520,14 @@
                         {'selector':'#aadi','name':'આડી'},
                     ];
                     let bcmccccc = forVigat.reduce((bcmccccc,crr)=>{
+                        let displayVal = $(crr.selector).val();
+                        if(displayVal == ""){
+                            displayVal = "-&nbsp;";
+                        }
                         return bcmccccc + `
                             <td class="text-center">
                                 <div>${crr.name}</div>
-                                <div>${ $(crr.selector).val() }</div>
+                                <div>${ displayVal }</div>
                             </td>
                         `;
                     },"");
