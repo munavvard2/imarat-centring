@@ -1274,6 +1274,10 @@
                 border: 0rem solid #d1d1d1 !important;
                 border-bottom: 0.1rem solid #d1d1d1 !important;
             }
+            table {
+                width: 100%;
+
+            }
         }
         .text-center{
             text-align: center;
@@ -3274,7 +3278,7 @@
                     let tekaBrass = totalTeka / 16;
 
                     let majuri = Number(((plateBrass + aadiBrass + tekaBrass) / 3) * 100);
-
+                    let deposit = Number($('#deposit').val());
                     let minBrass = Math.min(plateBrass, aadiBrass, tekaBrass);
 
                     let extraPlateBrass = plateBrass - minBrass;
@@ -3304,13 +3308,14 @@
                     $('.extraTekaBrassAmt').text(extraTekaBrassAmt);
 
                     $('.majuriAmt').text(majuri.toFixed(2));
+                    $('.depositAmt').text(deposit.toFixed(2));
                     let subTotal = Number(regularBrassAmt + extraPlateBrassAmt + extraAadiBrassAmt + extraTekaBrassAmt).toFixed(2);
                     let gTotal = Number(regularBrassAmt + extraPlateBrassAmt + extraAadiBrassAmt + extraTekaBrassAmt + majuri).toFixed(2);
-                    
+                    let finalTotal = Number(gTotal - deposit).toFixed(2);
                     $('#total').val(gTotal);
                     $('.gTotalAmt').text(gTotal);
                     $('.total_without_majuri').text(subTotal);
-
+                    $('.finalAmt').text(finalTotal);
                 };
 
                 $(function ($) {
@@ -3412,6 +3417,10 @@
                                     <div class="input number"><label for="aadi">Aadi</label><input type="number"
                                             name="aadi" class="text-right" id="aadi"></div>
                                 </div>
+                                <div class="column">
+                                    <div class="input number"><label for="deposit">Deposit</label><input type="number"
+                                            name="deposit" class="text-right" id="deposit"></div>
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="column-responsive column-66">
@@ -3447,6 +3456,18 @@
                                             <td><b>Grand Total</b></td>
                                             <td><span class="">&nbsp;</span></td>
                                             <td><span class="gTotalAmt">&nbsp;</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Deposit</td>
+                                            <td><span class="">&nbsp;</span></td>
+                                            <td><span class="depositAmt">&nbsp;</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Final</td>
+                                            <td><span class="">&nbsp;</span></td>
+                                            <td><span class="finalAmt">&nbsp;</span>
+                                            </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -3520,10 +3541,10 @@
                     if($('.regularBrass').html() != "0.00"){
                         html += `
                                 <tr>
-                                    <td>${counter}</td>
+                                    <td>(${counter})</td>
                                     <td>${$('.regularBrass').html()} બ્રાસ સેન્ટરીંગ</td>
-                                    <td>${$('#brass-price').val()}</td>
-                                    <td>${$('.regularBrassAmt').html()}</td>
+                                    <td style="text-align: right;">${$('#brass-price').val()}</td>
+                                    <td style="text-align: right;">${$('.regularBrassAmt').html()}</td>
                                 </tr>
                             `;
                         counter++;
@@ -3532,10 +3553,10 @@
                     if($('.extraPlateBrass').html() != "0.00"){
                         html += `
                                 <tr>
-                                    <td>${counter}</td>
+                                    <td>(${counter})</td>
                                     <td>${$('.extraPlateBrass').html()} બ્રાસ પ્લેટ</td>
-                                    <td>${$('#extra-plate-price').val()}</td>
-                                    <td>${$('.extraPlateBrassAmt').html()}</td>
+                                    <td style="text-align: right;">${$('#extra-plate-price').val()}</td>
+                                    <td style="text-align: right;">${$('.extraPlateBrassAmt').html()}</td>
                                 </tr>
                             `;
                         counter++;
@@ -3544,10 +3565,10 @@
                     if($('.extraAadiBrass').html() != "0.00"){
                         html += `
                                 <tr>
-                                    <td>${counter}</td>
+                                    <td>(${counter})</td>
                                     <td>${$('.extraAadiBrass').html()} બ્રાસ આડી</td>
-                                    <td>${$('#extra-aadi-price').val()}</td>
-                                    <td>${$('.extraAadiBrassAmt').html()}</td>
+                                    <td style="text-align: right;">${$('#extra-aadi-price').val()}</td>
+                                    <td style="text-align: right;">${$('.extraAadiBrassAmt').html()}</td>
                                 </tr>
                             `;
                         counter++;
@@ -3556,21 +3577,27 @@
                     if($('.extraTekaBrass').html() != "0.00"){
                         html += `
                                 <tr>
-                                    <td>${counter}</td>
+                                    <td>(${counter})</td>
                                     <td>${$('.extraTekaBrass').html()} બ્રાસ ટેકા</td>
-                                    <td>${$('#extra-aadi-price').val()}</td>
-                                    <td>${$('.extraTekaBrassAmt').html()}</td>
+                                    <td style="text-align: right;">${$('#extra-aadi-price').val()}</td>
+                                    <td style="text-align: right;">${$('.extraTekaBrassAmt').html()}</td>
                                 </tr>
                             `;
                         counter++;
                     }
                     $('.billing_body').html(html);
+                    if(Number($($('.finalAmt').get(0)).text()) > 0){
+                        $('.jamabaki').text("બાકી પડતી રકમ : "+ Number($($('.finalAmt').get(0)).text()).toFixed(2)); 
+                    }
+                    else{
+                        $('.jamabaki').text("જમા પડતી રકમ  : "+ Number($($('.finalAmt').get(0)).text()).toFixed(2)); 
+                    } 
                     window.print();
                 }
             </script>
         </div>
     </main>
-    <div class="print show-on-print">
+    <div class="print show-on-print" style="margin:20px">
         <div>
             <div class="row">
                 <div class="column">
@@ -3624,17 +3651,17 @@
             </div>
             
             <div class="row">
-                <table>
+                <table class="vigatTable" style="margin:20px">
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
                             <th>
                                 વિગત
                             </th>
-                            <th>
+                            <th style="text-align: right;">
                                 ભાવ
                             </th>
-                            <th>
+                            <th style="text-align: right;">
                                 રૂપિયા
                             </th>
                         </tr>
@@ -3644,32 +3671,47 @@
                     </tbody>
                     <tfoot>
                         <tr >
-                            <td rowspan="3"></td>
-                            <td rowspan="3">
+                            <td rowspan="5"></td>
+                            <td rowspan="5">
                                 <table class="text-center" style="border:0;width:60%">
                                     <tr><td class="text-center" colspan="6"><span style="font-size: 20px;">કુલ સામાન</span></td></tr>
                                     <tr class="bcmccccc">
                                     </tr>
                                 </table>
                             </td>
-                            <td>કુલ</td>
-                            <td class="total_without_majuri"></td>
+                            <td class="text-right">કુલ</td>
+                            <td class="total_without_majuri text-right"></td>
                         </tr>
                         <tr>
                             <!-- <td></td>
                             <td></td> -->
-                            <td>મજૂરી</td>
-                            <td class="majuriAmt"></td>
+                            <td class="text-right">મજૂરી</td>
+                            <td class="majuriAmt text-right"></td>
                         </tr>
                         <tr>
                             <!-- <td></td>
                             <td></td> -->
-                            <td>ટોટલ રૂ.</td>
-                            <td class="gTotalAmt"></td>
+                            <td class="text-right">ટોટલ રૂ.</td>
+                            <td class="gTotalAmt text-right"></td>
                         </tr>
-                        
+                        <tr>
+                            <!-- <td></td>
+                            <td></td> -->
+                            <td class="text-right">ડિપોઝિટ</td>
+                            <td class="depositAmt text-right"></td>
+                        </tr>
+                        <tr>
+                            <!-- <td></td>
+                            <td></td> -->
+                            <td class="text-right"></td>
+                            <td class="finalAmt text-right"></td>
+                        </tr>
+                                                
                     </tbody>
                 </table>
+            </div>
+            <div class="text-center border jamabaki" style="border:1px solid #c0c0c0;font-size: 22px;">
+
             </div>
         </div>
     </div>
