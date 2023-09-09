@@ -3491,16 +3491,16 @@
                 let printthebill = function(){
                     $('.billing_body').html('');
                     let forVigat = [
-                        {'selector':'#p-3-2','name':'પ્લેટ 3X2'},
-                        {'selector':'#p-3-1-ll','name':'પ્લેટ 3X1ll'},
-                        {'selector':'#p-3-1-l','name':'પ્લેટ 3X1l'},
-                        {'selector':'#p-3-1','name':'પ્લેટ 3X1'},
+                        {'selector':'#p-3-2','name':'3X2'},
+                        {'selector':'#p-3-1-ll','name':'3X1ll'},
+                        {'selector':'#p-3-1-l','name':'3X1l'},
+                        {'selector':'#p-3-1','name':'3X1'},
                         {'selector':'#teka','name':'ટેકા'},
                         {'selector':'#aadi','name':'આડી'},
                     ];
                     let bcmccccc = forVigat.reduce((bcmccccc,crr)=>{
                         return bcmccccc + `
-                            <td>
+                            <td class="text-center">
                                 <div>${crr.name}</div>
                                 <div>${ $(crr.selector).val() }</div>
                             </td>
@@ -3646,8 +3646,9 @@
                         <tr >
                             <td rowspan="3"></td>
                             <td rowspan="3">
-                                <table class="text-center" style="border:0px">
-                                    <tr class="bcmccccc" >
+                                <table class="text-center" style="border:0;width:60%">
+                                    <tr><td class="text-center" colspan="6"><span style="font-size: 20px;">કુલ સામાન</span></td></tr>
+                                    <tr class="bcmccccc">
                                     </tr>
                                 </table>
                             </td>
